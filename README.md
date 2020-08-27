@@ -1,5 +1,3 @@
-# dotnet-sitemap
-
 ## How to Install?
 Install-Package SitemapCore
 
