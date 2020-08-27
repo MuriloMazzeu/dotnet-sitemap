@@ -5,7 +5,7 @@ namespace WebUI.Controllers
 {
     public class HomeController : Controller
     {
-        [Sitemap(Priority = SitemapPriority.Highest, LastModification = "2020-08-25")]
+        [Sitemap(Priority = SitemapPriority.Highest, ChangeFrequency = ChangeFrequency.Weekly, LastModification = "2020-08-25")]
         public IActionResult Index()
         {
             return View();

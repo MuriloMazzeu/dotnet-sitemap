@@ -13,6 +13,7 @@ namespace SitemapCore
             var settings = new SitemapSettings();
             if (configure is null)
             {
+                settings.BaseUrl = "http://localhost/";
                 settings.ForUserAgent("*").Allow("/");
             }
             else configure(settings);

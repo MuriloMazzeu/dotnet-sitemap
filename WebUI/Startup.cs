@@ -3,15 +3,33 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using SitemapCore;
+using SitemapCore.Shared;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace WebUI
 {
-    public class Sdp : ISitemapProvider
+    public class MyCustomSitemapProvider : ISitemapProvider
     {
-        public Task<IEnumerable<Sitemap>> InvokeAsync() => Task.FromResult(Enumerable.Empty<Sitemap>());
+        public MyCustomSitemapProvider(ILocationHelper locationHelper)
+        {
+            _locationHelper = locationHelper;
+        }
+
+        private readonly ILocationHelper _locationHelper;
+
+        public Task<IEnumerable<Sitemap>> InvokeAsync()
+        {
+            var location = _locationHelper.GetSitemapUrl("example-path");
+            var myMock = new Sitemap(location)
+            {
+                ChangeFrequency = ChangeFrequency.Monthly,
+                Priority = SitemapPriority.AboveNormal,
+            };
+
+            return Task.FromResult(Enumerable.Repeat(myMock, 3));
+        }
     }
 
     public sealed class Startup
@@ -22,7 +40,7 @@ namespace WebUI
             {
                 options.BaseUrl = "http://localhost/";
                 options.SitemapPath = "/sitemap";
-                options.SetDynamicProvider<Sdp>()
+                options.SetDynamicProvider<MyCustomSitemapProvider>()
                     .ForUserAgent("*")
                     .Allow("/");
             });

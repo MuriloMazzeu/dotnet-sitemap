@@ -4,6 +4,16 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <RootNamespace>SitemapCore</RootNamespace>
     <LangVersion>8.0</LangVersion>
+    <Version>1.0.2</Version>
+    <PackageId>SitemapCore</PackageId>
+    <Authors>Murilo Mazzeu</Authors>
+    <Product>SitemapCore</Product>
+    <Description>Improve SEO, add robots.txt and sitemap.xml support in your aspnet core project</Description>
+    <RepositoryType>git</RepositoryType>
+    <PackageTags>seo, aspnet core, mvc</PackageTags>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <RepositoryUrl>https://github.com/MuriloMazzeu/dotnet-sitemap</RepositoryUrl>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
 
   <ItemGroup>
