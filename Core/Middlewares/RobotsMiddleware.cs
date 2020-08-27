@@ -7,8 +7,8 @@ namespace SitemapCore.Middlewares
 {
     public sealed class RobotsMiddleware : IMiddleware
     {
-        private const string ROBOTS_TYPE = "text/plain";
-        private const string ROBOTS_PATH = "/robots.txt";
+        private const string TYPE = "text/plain";
+        private const string PATH = "/robots.txt";
 
         public RobotsMiddleware(SitemapSettings settings, ILocationHelper locationHelper)
         {
@@ -36,21 +36,27 @@ namespace SitemapCore.Middlewares
 
         private string Content { get; }
 
-        public async Task InvokeAsync(HttpContext context, RequestDelegate next)
+        private void SetCommonHeaders(IHeaderDictionary headers)
+        {
+            headers.Append("Cache-Control", "public, max-age=31536000");
+        }
+
+        public Task InvokeAsync(HttpContext context, RequestDelegate next)
         {
             if(context.Request.Path.HasValue)
             {
                 var response = context.Response;
                 var path = context.Request.Path.Value.ToLowerInvariant();
-                if (path == ROBOTS_PATH)
+                if (path == PATH)
                 {
                     response.StatusCode = 200;
-                    response.ContentType = ROBOTS_TYPE;
-                    await response.WriteAsync(Content, Encoding.UTF8);
+                    response.ContentType = TYPE;
+                    SetCommonHeaders(response.Headers);
+                    return response.WriteAsync(Content, Encoding.UTF8);
                 }
             }
 
-            await next(context);
+            return next(context);
         }
     }
 }

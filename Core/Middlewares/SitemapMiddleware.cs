@@ -14,7 +14,7 @@ namespace SitemapCore.Middlewares
 {
     public sealed class SitemapMiddleware : IMiddleware
     {
-        private const string SITEMAP_TYPE = "text/xml";
+        private const string TYPE = "text/xml";
 
         public SitemapMiddleware(SitemapSettings a, ISitemapProvider b, IActionDescriptorCollectionProvider c, ILocationHelper d)
         {
@@ -87,6 +87,11 @@ namespace SitemapCore.Middlewares
             return sw.ToString();
         }
 
+        private void SetCommonHeaders(IHeaderDictionary headers)
+        {
+            headers.Append("Cache-Control", "public, max-age=31536000");
+        }
+
         public async Task InvokeAsync(HttpContext context, RequestDelegate next)
         {
             if (context.Request.Path.HasValue)
@@ -97,12 +102,13 @@ namespace SitemapCore.Middlewares
                     var content = await GetContentAsync();
 
                     response.StatusCode = 200;
-                    response.ContentType = SITEMAP_TYPE;
+                    response.ContentType = TYPE;
+                    SetCommonHeaders(response.Headers);
                     await response.WriteAsync(Format(content));
                 }
+                else await next(context);
             }
-            
-            await next(context);
+            else await next(context);
         }
     }
 }
